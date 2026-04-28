@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --tjm-accent: 168 85 247; /* purple-500 */
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply text-slate-900 dark:text-slate-100;
+  background:
+    radial-gradient(900px 600px at 20% -10%, rgba(168, 85, 247, 0.16), transparent 55%),
+    radial-gradient(900px 600px at 100% 0%, rgba(99, 102, 241, 0.10), transparent 55%),
+    radial-gradient(900px 600px at 80% 110%, rgba(236, 72, 153, 0.08), transparent 55%),
+    linear-gradient(to bottom, #f8fafc, #ffffff);
+}
+
+.dark body {
+  background:
+    radial-gradient(900px 600px at 20% -10%, rgba(168, 85, 247, 0.22), transparent 55%),
+    radial-gradient(900px 600px at 100% 0%, rgba(99, 102, 241, 0.14), transparent 55%),
+    radial-gradient(900px 600px at 80% 110%, rgba(236, 72, 153, 0.10), transparent 55%),
+    linear-gradient(to bottom, #07060b, #0b0a0f);
+}
+
+.card {
+  @apply rounded-2xl border border-slate-200/70 bg-white/80 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/60;
+}
+
+.card-hover {
+  @apply transition hover:-translate-y-[1px] hover:shadow-md;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-medium transition-colors;
+}
+
+.btn-primary {
+  @apply btn text-white;
+  background: linear-gradient(135deg, rgb(147 51 234), rgb(168 85 247));
+  box-shadow: 0 10px 22px rgba(168, 85, 247, 0.22);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, rgb(126 34 206), rgb(147 51 234));
+}
+
+.btn-ghost {
+  @apply btn bg-white/50 hover:bg-white/80 dark:bg-slate-950/20 dark:hover:bg-slate-950/40;
+}
+
+.btn-soft {
+  @apply btn border border-slate-200/70 bg-white/60 text-slate-800 hover:bg-white/90 dark:border-slate-800/60 dark:bg-slate-950/30 dark:text-slate-100 dark:hover:bg-slate-950/55;
+}
+
+.input {
+  @apply w-full rounded-xl border border-slate-200/70 bg-white/70 px-3 py-2 text-sm outline-none backdrop-blur;
+  @apply focus:ring-2 focus:ring-purple-500/70 dark:border-slate-800/60 dark:bg-slate-950/35;
+}
+
+.section-title {
+  @apply text-2xl font-semibold tracking-tight;
+}
+
+.muted {
+  @apply text-sm text-slate-500 dark:text-slate-400;
+}
