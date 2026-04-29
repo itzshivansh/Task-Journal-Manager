@@ -87,14 +87,39 @@ export async function updateTask(req, res, next) {
   try {
     const userId = req.user.id;
     const { id } = req.params;
-    const patch = { ...req.body };
-    if (patch.dueDate !== undefined) patch.dueDate = patch.dueDate ? new Date(patch.dueDate) : null;
-    if (patch.status === "Completed") patch.completedAt = patch.completedAt ? new Date(patch.completedAt) : new Date();
-    if (patch.status === "Pending") patch.completedAt = null;
-    if (patch.completedAt !== undefined && patch.completedAt !== null) patch.completedAt = new Date(patch.completedAt);
 
-    const task = await Task.findOneAndUpdate({ _id: id, userId }, patch, { new: true });
+    const patch = { ...req.body };
+
+    // ✅ Normalize checkbox-style input
+    if (patch.completed === true) {
+      patch.status = "Completed";
+      patch.completedAt = new Date();
+      delete patch.completed;
+    }
+
+    if (patch.completed === false) {
+      patch.status = "Pending";
+      patch.completedAt = null;
+      delete patch.completed;
+    }
+
+    // ✅ Ensure valid date conversion
+    if (patch.dueDate !== undefined) {
+      patch.dueDate = patch.dueDate ? new Date(patch.dueDate) : null;
+    }
+
+    if (patch.completedAt !== undefined && patch.completedAt !== null) {
+      patch.completedAt = new Date(patch.completedAt);
+    }
+
+    const task = await Task.findOneAndUpdate(
+      { _id: id, userId },
+      { $set: patch },
+      { new: true, runValidators: true }
+    );
+
     if (!task) return next(new HttpError(404, "Task not found"));
+
     return res.json({ task });
   } catch (err) {
     return next(err);
