@@ -3,18 +3,22 @@ import { connectDb } from "./config/db.js";
 import { env } from "./config/env.js";
 
 async function main() {
-  await connectDb();
-  const app = createApp();
+  try {
+    await connectDb();
 
-  app.listen(env.PORT, () => {
-    // eslint-disable-next-line no-console
-    console.log(`Task & Journal Manager API listening on :${env.PORT}`);
-  });
+    const app = createApp();
+
+    // ✅ Render-safe port handling
+    const PORT = process.env.PORT || env.PORT || 5000;
+
+    app.listen(PORT, () => {
+      console.log(`Task & Journal Manager API listening on :${PORT}`);
+    });
+
+  } catch (err) {
+    console.error("Fatal startup error:", err);
+    process.exit(1);
+  }
 }
 
-main().catch((err) => {
-  // eslint-disable-next-line no-console
-  console.error("Fatal startup error:", err);
-  process.exit(1);
-});
-
+main();
