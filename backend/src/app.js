@@ -14,33 +14,15 @@ import { errorHandler, notFound } from "./middleware/errorHandler.js";
 export function createApp() {
   const app = express();
 
-  // =========================
-  // Security Middleware
-  // =========================
   app.use(helmet());
   app.use(express.json({ limit: "1mb" }));
   app.use(morgan("dev"));
 
-  // =========================
-  // CORS (FIXED - PRODUCTION SAFE)
-  // =========================
-  const allowedOrigins = [
-    "https://task-journal-manager.vercel.app",
-    "http://localhost:5173"
-  ];
-
+  // FIXED CORS (NO BLOCKING)
   app.use(
     cors({
       origin: (origin, callback) => {
-        // Allow Postman / server-to-server
-        if (!origin) return callback(null, true);
-
-        if (allowedOrigins.includes(origin)) {
-          return callback(null, true);
-        }
-
-        // DO NOT crash request in production
-        return callback(null, false);
+        return callback(null, true);
       },
       credentials: true,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -48,19 +30,12 @@ export function createApp() {
     })
   );
 
-  // Handle preflight requests
   app.options("*", cors());
 
-  // =========================
-  // HEALTH CHECK
-  // =========================
   app.get("/health", (_req, res) => {
     res.json({ ok: true });
   });
 
-  // =========================
-  // ROOT
-  // =========================
   app.get("/", (_req, res) => {
     res.json({
       status: "OK",
@@ -72,17 +47,11 @@ export function createApp() {
     res.status(200).end();
   });
 
-  // =========================
-  // ROUTES
-  // =========================
   app.use("/api/auth", authRoutes);
   app.use("/api/dashboard", dashboardRoutes);
   app.use("/api/tasks", taskRoutes);
   app.use("/api/journal", journalRoutes);
 
-  // =========================
-  // ERROR HANDLERS
-  // =========================
   app.use(notFound);
   app.use(errorHandler);
 
