@@ -23,8 +23,8 @@ export function createApp() {
     cors({
       origin: true, // allows all origins (safe for dev + your Vercel frontend)
       credentials: true,
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization"],
+methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     })
   );
 
