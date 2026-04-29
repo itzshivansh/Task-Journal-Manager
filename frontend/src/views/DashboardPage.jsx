@@ -28,11 +28,13 @@ export function DashboardPage() {
     <div className="space-y-4">
       <div className="flex items-end justify-between">
         <div>
-          <div className="muted">{format(new Date(), "EEEE, MMM d")}</div>
-          <h1 className="section-title">Dashboard</h1>
+          <div className="text-sm text-slate-500 dark:text-slate-400">
+            {format(new Date(), "EEEE, MMM d")}
+          </div>
+          <h1 className="text-2xl font-semibold">Dashboard</h1>
         </div>
         <div className="flex gap-2">
-          <Link className="btn-soft" to="/tasks">
+          <Link className="btn-ghost" to="/tasks">
             View tasks
           </Link>
           <Link className="btn-primary" to="/journal">
@@ -45,13 +47,13 @@ export function DashboardPage() {
         <div className="card p-6">Loading…</div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="card card-hover p-5">
+          <div className="card p-5">
             <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Pending tasks
             </div>
             <div className="mt-2 text-3xl font-semibold">{data?.tasks?.pending ?? 0}</div>
           </div>
-          <div className="card card-hover p-5">
+          <div className="card p-5">
             <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Completed tasks
             </div>
@@ -60,7 +62,7 @@ export function DashboardPage() {
               Completed today: {data?.tasks?.completedToday ?? 0}
             </div>
           </div>
-          <div className="card card-hover p-5">
+          <div className="card p-5">
             <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Journal streak
             </div>
@@ -70,7 +72,7 @@ export function DashboardPage() {
             </div>
           </div>
 
-          <div className="card card-hover p-5 md:col-span-3">
+          <div className="card p-5 md:col-span-3">
             <div className="mb-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
               Today’s journal entry
             </div>

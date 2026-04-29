@@ -119,15 +119,15 @@ export function JournalPage() {
     <div className="space-y-4">
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="section-title">Journal</h1>
-          <div className="muted">
+          <h1 className="text-2xl font-semibold">Journal</h1>
+          <div className="text-sm text-slate-500 dark:text-slate-400">
             {format(new Date(), "EEEE, MMM d")} • {saving ? "Saving…" : lastSavedAt ? `Saved ${format(lastSavedAt, "p")}` : "—"}
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div className="md:col-span-2 card card-hover p-4">
+        <div className="md:col-span-2 card p-4">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <div className="md:col-span-2">
             <label className="mb-1 block text-xs font-semibold text-slate-500 dark:text-slate-400">
@@ -147,7 +147,7 @@ export function JournalPage() {
           <ReactQuill theme="snow" value={contentHtml} onChange={setContentHtml} />
         </div>
         <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-          Autosaves while typing, and syncs to the server every ~1s.
+          Autosaves locally while typing, and syncs to the server every ~1s.
         </div>
       </div>
 
@@ -156,7 +156,7 @@ export function JournalPage() {
         </div>
       </div>
 
-      <div className="card card-hover p-4">
+      <div className="card p-4">
         <div className="mb-3 flex items-center justify-between">
           <div>
             <div className="text-sm font-semibold">History</div>
