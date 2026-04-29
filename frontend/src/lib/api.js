@@ -1,20 +1,15 @@
 import axios from "axios";
 import { getToken } from "./storage";
 
-const baseURL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "https://task-journal-manager.onrender.com";
+const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5050";
 
-const API = axios.create({
+export const api = axios.create({
   baseURL: `${baseURL}/api`
 });
 
-API.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
   const token = getToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-export default API;
