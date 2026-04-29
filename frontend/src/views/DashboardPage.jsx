@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../lib/api";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
+import PomodoroTimer from "./components/PomodoroTimer"; // ✅ correct import
 
 export function DashboardPage() {
   const [data, setData] = useState(null);
@@ -9,6 +10,7 @@ export function DashboardPage() {
 
   useEffect(() => {
     let mounted = true;
+
     async function load() {
       setBusy(true);
       try {
@@ -18,7 +20,9 @@ export function DashboardPage() {
         if (mounted) setBusy(false);
       }
     }
+
     load();
+
     return () => {
       mounted = false;
     };
@@ -26,6 +30,8 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-4">
+      
+      {/* HEADER */}
       <div className="flex items-end justify-between">
         <div>
           <div className="text-sm text-slate-500 dark:text-slate-400">
@@ -33,6 +39,7 @@ export function DashboardPage() {
           </div>
           <h1 className="text-2xl font-semibold">Dashboard</h1>
         </div>
+
         <div className="flex gap-2">
           <Link className="btn-ghost" to="/tasks">
             View tasks
@@ -43,48 +50,70 @@ export function DashboardPage() {
         </div>
       </div>
 
+      {/* ✅ POMODORO TIMER */}
+      <div className="card p-5 flex justify-center">
+        <PomodoroTimer />
+      </div>
+
+      {/* DATA SECTION */}
       {busy ? (
         <div className="card p-6">Loading…</div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          
+          {/* Pending */}
           <div className="card p-5">
             <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Pending tasks
             </div>
-            <div className="mt-2 text-3xl font-semibold">{data?.tasks?.pending ?? 0}</div>
+            <div className="mt-2 text-3xl font-semibold">
+              {data?.tasks?.pending ?? 0}
+            </div>
           </div>
+
+          {/* Completed */}
           <div className="card p-5">
             <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Completed tasks
             </div>
-            <div className="mt-2 text-3xl font-semibold">{data?.tasks?.completed ?? 0}</div>
+            <div className="mt-2 text-3xl font-semibold">
+              {data?.tasks?.completed ?? 0}
+            </div>
             <div className="mt-2 text-sm text-slate-500 dark:text-slate-400">
               Completed today: {data?.tasks?.completedToday ?? 0}
             </div>
           </div>
+
+          {/* Journal */}
           <div className="card p-5">
             <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Journal streak
             </div>
-            <div className="mt-2 text-3xl font-semibold">{data?.journal?.streak ?? 0}</div>
+            <div className="mt-2 text-3xl font-semibold">
+              {data?.journal?.streak ?? 0}
+            </div>
             <div className="mt-2 text-sm text-slate-500 dark:text-slate-400">
               Today’s entry: {data?.journal?.today ? "✅" : "—"}
             </div>
           </div>
 
+          {/* Journal Entry */}
           <div className="card p-5 md:col-span-3">
             <div className="mb-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
               Today’s journal entry
             </div>
+
             {data?.journal?.today ? (
               <div>
                 <div className="text-lg font-semibold">
                   {data.journal.today.title || "Untitled"}
                 </div>
+
                 <div className="mt-2 line-clamp-3 text-sm text-slate-600 dark:text-slate-300">
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: data.journal.today.contentHtml || "<em>(empty)</em>"
+                      __html:
+                        data.journal.today.contentHtml || "<em>(empty)</em>",
                     }}
                   />
                 </div>
@@ -92,7 +121,10 @@ export function DashboardPage() {
             ) : (
               <div className="text-sm text-slate-500 dark:text-slate-400">
                 No entry yet. Head to{" "}
-                <Link className="text-purple-700 hover:underline dark:text-purple-300" to="/journal">
+                <Link
+                  className="text-purple-700 hover:underline dark:text-purple-300"
+                  to="/journal"
+                >
                   Journal
                 </Link>{" "}
                 to write one.
@@ -104,4 +136,3 @@ export function DashboardPage() {
     </div>
   );
 }
-
