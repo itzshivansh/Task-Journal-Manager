@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { api } from "../lib/api";
+import API from "../utils/api"; // ✅ FIXED IMPORT
 import { clearToken, getToken, setToken } from "../lib/storage";
 
 const AuthContext = createContext(null);
@@ -11,6 +11,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let mounted = true;
+
     async function boot() {
       try {
         if (!token) {
@@ -20,9 +21,12 @@ export function AuthProvider({ children }) {
           }
           return;
         }
-        const { data } = await api.get("/auth/me");
+
+        // ✅ Correct API call
+        const { data } = await API.get("/api/auth/me");
+
         if (mounted) setUser(data.user);
-      } catch {
+      } catch (err) {
         clearToken();
         if (mounted) {
           setTokenState(null);
@@ -32,7 +36,9 @@ export function AuthProvider({ children }) {
         if (mounted) setLoading(false);
       }
     }
+
     boot();
+
     return () => {
       mounted = false;
     };
@@ -43,18 +49,26 @@ export function AuthProvider({ children }) {
       token,
       user,
       loading,
+
       async login(email, password) {
-        const { data } = await api.post("/auth/login", { email, password });
+        const { data } = await API.post("/api/auth/login", {
+          email,
+          password
+        });
+
         setToken(data.token);
         setTokenState(data.token);
         setUser(data.user);
       },
+
       async register(payload) {
-        const { data } = await api.post("/auth/register", payload);
+        const { data } = await API.post("/api/auth/register", payload);
+
         setToken(data.token);
         setTokenState(data.token);
         setUser(data.user);
       },
+
       logout() {
         clearToken();
         setTokenState(null);
@@ -72,4 +86,3 @@ export function useAuth() {
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }
-

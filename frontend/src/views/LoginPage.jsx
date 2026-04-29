@@ -7,6 +7,7 @@ export function LoginPage() {
   const { login } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -25,12 +26,29 @@ export function LoginPage() {
           className="space-y-3"
           onSubmit={async (e) => {
             e.preventDefault();
+
+            if (!email || !password) {
+              toast.show("Please enter email and password", "error");
+              return;
+            }
+
             setBusy(true);
+
             try {
               await login(email, password);
+
+              toast.show("Login successful 🎉", "success");
+
               navigate("/");
             } catch (err) {
-              toast.show(err?.response?.data?.error?.message || "Login failed", "error");
+              console.error(err);
+
+              toast.show(
+                err?.response?.data?.error ||
+                  err?.response?.data?.message ||
+                  "Login failed",
+                "error"
+              );
             } finally {
               setBusy(false);
             }
@@ -40,8 +58,14 @@ export function LoginPage() {
             <label className="mb-1 block text-xs font-semibold text-slate-500 dark:text-slate-400">
               Email
             </label>
-            <input className="input" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input
+              className="input"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
+
           <div>
             <label className="mb-1 block text-xs font-semibold text-slate-500 dark:text-slate-400">
               Password
@@ -53,6 +77,7 @@ export function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
           <button className="btn-primary w-full" disabled={busy}>
             {busy ? "Signing in…" : "Sign in"}
           </button>
@@ -60,7 +85,10 @@ export function LoginPage() {
 
         <div className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
           New here?{" "}
-          <Link className="font-medium text-purple-700 hover:underline dark:text-purple-300" to="/register">
+          <Link
+            className="font-medium text-purple-700 hover:underline dark:text-purple-300"
+            to="/register"
+          >
             Create an account
           </Link>
         </div>
@@ -68,4 +96,3 @@ export function LoginPage() {
     </div>
   );
 }
-
