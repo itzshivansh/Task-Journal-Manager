@@ -12,35 +12,65 @@ import { errorHandler, notFound } from "./middleware/errorHandler.js";
 export function createApp() {
   const app = express();
 
+  // =======================
+  // Security & Middleware
+  // =======================
   app.use(helmet());
+
   const allowedOrigins = String(env.CLIENT_ORIGINS || "")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+
   app.use(
     cors({
       origin(origin, callback) {
-        // allow same-origin/non-browser tools (no Origin header)
-        if (!origin) return callback(null, true);
+        if (!origin) return callback(null, true); // allow Postman etc.
         if (allowedOrigins.includes(origin)) return callback(null, true);
         return callback(new Error(`CORS blocked for origin: ${origin}`));
       },
       credentials: true
     })
   );
+
   app.use(express.json({ limit: "1mb" }));
   app.use(morgan("dev"));
 
-  app.get("/health", (_req, res) => res.json({ ok: true }));
+  // =======================
+  // Health Check
+  // =======================
+  app.get("/health", (_req, res) => {
+    res.json({ ok: true });
+  });
 
+  // =======================
+  // ROOT ROUTE (IMPORTANT)
+  // =======================
+  app.get("/", (_req, res) => {
+    res.json({
+      status: "OK",
+      message: "Task & Journal API is running 🚀"
+    });
+  });
+
+  // For Render HEAD request
+  app.head("/", (_req, res) => {
+    res.status(200).end();
+  });
+
+  // =======================
+  // API ROUTES
+  // =======================
   app.use("/api/auth", authRoutes);
   app.use("/api/dashboard", dashboardRoutes);
   app.use("/api/tasks", taskRoutes);
   app.use("/api/journal", journalRoutes);
 
+  // =======================
+  // ERROR HANDLING
+  // =======================
   app.use(notFound);
   app.use(errorHandler);
 
   return app;
 }
-
